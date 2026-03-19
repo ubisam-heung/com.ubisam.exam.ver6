@@ -22,7 +22,7 @@ public class User {
   //유저 비밀번호
   private String password;
   //유저 전화번호
-  private Integer phone;
+  private String phone;
   //유저 주소
   private String address;
   //유저 가입일
@@ -34,5 +34,11 @@ public class User {
   //마지막 로그인
   private String lastLoginedAt;
 
+
+
+
+
+
+  
   
 }
