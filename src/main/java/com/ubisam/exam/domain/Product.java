@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Entity
@@ -37,13 +38,16 @@ public class Product {
   //판매자(User - Product 매칭)
   //1명의 User가 여러개의 Product 등록 가능
   //1개의 Product가 여러명의 User 등록 불가능
-  @ManyToOne
-  private User user;
+  // @ManyToOne
+  // private User user;
 
   //분류(Product - ProductGroup 매칭)
   //1개의 Product가 여러개의 ProductGroup에 등록 가능
   //1개의 ProductGroup이 여러개의 Product 등록 가능
-  @ManyToMany
-  private ProductGroup productGroup;
+  // @ManyToMany
+  // private ProductGroup productGroup;
+
+  @Transient
+  private String keyword;
   
 }
