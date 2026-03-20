@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -69,17 +68,47 @@ class UserTests {
     JpaSpecificationBuilder<User> queryName = JpaSpecificationBuilder.of(User.class);
     Specification<User> specName = queryName.where()
       .and().eq("name", "길동4").build();
-    Optional<User> resultName = userRepository.findOne(specName);
+    List<User> resultName = userRepository.findAll(specName);
     //쿼리 결과 행 1개를 찾고 그 행의 name필드가 "길동4" 인지 검사
-    assertEquals("길동4", resultName.get().getName());
+    boolean hasUserName = resultName.stream().anyMatch(u -> "길동4".equals(u.getName()));
+    assertEquals(true, hasUserName);
 
     //2) 특정 유저를 이메일로 검색하기
     JpaSpecificationBuilder<User> queryEmail = JpaSpecificationBuilder.of(User.class);
     Specification<User> specEmail = queryEmail.where()
     .and().eq("email", "abc4@abc.com").build();
-    Optional<User> resultEmail = userRepository.findOne(specEmail);
+    List<User> resultEmail = userRepository.findAll(specEmail);
     //쿼리 결과 행 1개를 찾고 그 행의 email필드가 "abc4@abc.com" 인지 검사
-    assertEquals("abc4@abc.com", resultEmail.get().getEmail());
+    boolean hasUserEmail = resultEmail.stream().anyMatch(u -> "abc4@abc.com".equals(u.getEmail()));
+    assertEquals(true, hasUserEmail);
   }
+
+  //Search 테스트
+  @Test
+  void contextLoads3() throws Exception{
+
+    //길동1 ~ 길동40까지의 유저 추가
+    List<User> userList = new ArrayList<>(); 
+    for ( int i = 1; i <= 40; i++){
+      userList.add(docs.newEntityforHandler("길동" + i, "abc"+i+"@abc.com"));
+    }
+    userRepository.saveAll(userList);
+
+    //Search - 검색
+    //이름
+    mvc.perform(get("/api/users/search/findByName")
+    .param("name", "길동4")).andExpect(is2xx());
+    //이메일
+    mvc.perform(get("/api/users/search/findByEmail")
+    .param("email", "abc7@abc.com")).andExpect(is2xx());
+
+    //Search - 페이징 5개씩 8페이지
+    mvc.perform(get("/api/users").param("size", "5")).andExpect(is2xx());
+
+    //Search - 정렬 id 내림차순
+    mvc.perform(get("/api/users").param("sort", "id,desc")).andExpect(is2xx());
+
+  }
+
 
 }

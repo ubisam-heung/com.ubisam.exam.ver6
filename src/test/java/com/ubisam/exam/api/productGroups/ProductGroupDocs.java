@@ -12,6 +12,7 @@ import io.u2ware.common.docs.MockMvcRestDocs;
 @Component
 public class ProductGroupDocs extends MockMvcRestDocs{
 
+  //목적: 상품분류명으로 CRUD 작업 테스트를 위한 메소드
   public ProductGroup newEntity(String groupName) {
     ProductGroup productGroupEntity = new ProductGroup();
     productGroupEntity.setGroupName(groupName);
